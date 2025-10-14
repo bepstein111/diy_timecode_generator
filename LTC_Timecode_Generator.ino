@@ -657,7 +657,7 @@ void IRAM_ATTR timerInterrupt()
 }
 
 //Timecode receiving
-void onDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len) {
+void onDataRecv(const esp_now_recv_info_t *recv_info, const uint8_t *incomingData, int len) {
   memcpy(&data, incomingData, sizeof(data));
   /*Serial.printf("Empfangen von: %02X:%02X:%02X:%02X:%02X:%02X\n",
                 mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);*/
@@ -745,17 +745,13 @@ void setup()
   pinMode(LEDB, OUTPUT);
 
   // 50% PWM Ground Level
-  ledcSetup(0, 1000000/framerate , 8);
-  ledcAttachPin(tlcpin, 0);
+  ledcAttach(tlcpin, 1000000/framerate, 8);
   ledcWrite(0, groundLevel);
 
   // LED Setup
-  ledcSetup(1, 5000 , 8);
-  ledcAttachPin(LEDR, 1);
-  ledcSetup(2, 5000 , 8);
-  ledcAttachPin(LEDG, 2);
-  ledcSetup(3, 5000 , 8);
-  ledcAttachPin(LEDB, 3);
+  ledcAttach(LEDR, 5000 , 8);
+  ledcAttach(LEDG, 5000 , 8);
+  ledcAttach(LEDB, 5000 , 8);
   
   //LED to red
   LEDdisplay(255,0,0);
